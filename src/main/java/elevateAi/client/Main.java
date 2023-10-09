@@ -14,10 +14,10 @@ public class Main {
         var cli = Client.newInstance(baseUrl, apiToken);
 
         // 1,2. Declare
-        var it = cli.declare("en-us", "default", "highAccuracy", null, null, false);
+        var it = cli.declare("en-us", "default", "highAccuracy", null, null, false, "sample.wav", "some ext id");
 
         // 3. Upload media file
-        var uploadOk = cli.upload(it, "d:/dev/elevateai-cli/sample-media/media.wav");
+        var uploadOk = cli.upload(it, "d:/sample.wav");
 
         // 4. Wait for processing completion
         while (true){

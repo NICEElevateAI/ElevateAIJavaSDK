@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.HashMap;
+
 
 import  com.fasterxml.jackson.databind.*;
 
@@ -42,7 +44,7 @@ public class Client {
 	 * @throws Exception
 	 */
 	public Map<String, String> declare(String languageTag, String vertical, String audioTranscriptionMode) throws Exception {
-		return declare(languageTag, vertical, audioTranscriptionMode, null, null, false);
+	        return declare(languageTag, vertical, audioTranscriptionMode, null, null, false, null, null);
 	}
 
 	/**
@@ -53,7 +55,7 @@ public class Client {
 	 * @throws Exception
 	 */
 	public Map<String, String> declare(String mediaUri, String mediaFile ) throws Exception {
-		return declare("en-us", "default", "highAccuracy", mediaUri, mediaFile, true);
+	        return declare("en-us", "default", "highAccuracy", mediaUri, mediaFile, true, null, null);
 	}
 
 	/**
@@ -64,17 +66,30 @@ public class Client {
 	 * @param mediaUri
 	 * @param mediaFile
 	 * @param confirm
+	 * @param originalfilename
+	 * @param externalidentifier
 	 * @return
 	 * @throws Exception
 	 */
 	public Map<String, String> declare(String languageTag, String vertical, String audioTranscriptionMode,
-									   String mediaUri, String mediaFile, boolean confirm ) throws Exception {
+					   String mediaUri, String mediaFile, boolean confirm,
+					   String originalFilename, String externalIdentifier) throws Exception {
 
-		Map pl = Map.of("type", "audio", "languageTag",languageTag, "vertical", vertical,
-				"audioTranscriptionMode", audioTranscriptionMode, "includeAiResults", true
-		);
+		Map<String, Object> pl = new HashMap<>();
+                pl.put("type", "audio");
+                pl.put("languageTag", languageTag);
+                pl.put("vertical", vertical);
+                pl.put("audioTranscriptionMode", audioTranscriptionMode);
+                pl.put("includeAiResults", true);
+		
 		if(mediaUri!=null)
 			pl.put("downloadUrl", mediaUri);
+
+		if (originalFilename!=null)
+		        pl.put("originalFilename", originalFilename);
+
+		if (externalIdentifier!=null)
+		        pl.put("externalIdentifier", externalIdentifier);
 
 		var req = HttpRequest.newBuilder()
 				.uri(new URI(baseUrl+"/interactions"))
